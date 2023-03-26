@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Veggie Store</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+
+<div class="m-5 fixed right-0 bg-green-300 p-5" id="total">
+	<h1 class="text-3xl">Total</h1>
+	<p class="text-xl"></p>
+</div>
+
+<div class="m-5">
+	<h1 class="text-4xl mb-5">Veggie Store</h1>
+	<input oninput="watchInput(this)" class="border-2 rounded-md border-blue-500 p-3" />
+	<div class="p-4 bg-blue-100">
+		<p>Cari sesuai harga</p>
+  		<input type="range" min="5000" max="20000" oninput="ranges(this)">
+  		<p>Max : Rp<span id="range"></span></p>
+	</div>
+	<div id="veggies" class="mt-4">
+	</div>
+</div>
+
+<script type="text/javascript" src="index2.js"></script>
+<script type="text/javascript">
+	let $ = (el)=>document.querySelector(el)
+
+	const Veggie = new VegetableStore();
+
+	function watchInput(el){
+		if(el.value){
+			$("#veggies").innerHTML = ``
+			const byTitleSearch = new SearchByTitle();
+			Veggie.setSearchStrategy(byTitleSearch)
+			let response = Veggie.search(el.value)
+			renderThing(response)
+		}else{
+			$("#veggies").innerHTML = ``
+		}
+	}
+
+	function proceedBuy(id){
+		Veggie.add(id)
+
+		let total = Veggie.sum()
+
+		$("#total p").innerHTML = `Rp${total}`
+	}
+
+	function ranges(el){
+		console.log(el.value)
+		$("#range").innerText = el.value
+		if(el.value>6000){
+			const byPriceSearch = new SearchByPriceRange();
+			Veggie.setSearchStrategy(byPriceSearch)
+			let response = Veggie.search(el.value)
+
+			renderThing(response)
+		}else{
+			$("#veggies").innerHTML = ``
+		}
+	}
+
+	function renderThing(response){
+		response.forEach((r,i)=>{
+			$("#veggies").innerHTML += `
+			<div class="border-2 border-amber-400 p-4 w-52 mt-4">
+				<p class="text-2xl">${r.title}</p>
+				<p class="text-1xl">Rp${r.price}</p>
+				<button class="mt-5 p-3 bg-yellow-300 font-bold rounded-md" onclick=
+				"proceedBuy(${r.id})">Buy</button>
+			</div>
+		`
+		})
+	}
+
+</script>
+</body>
+</html>
