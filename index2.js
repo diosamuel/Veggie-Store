@@ -80,10 +80,6 @@ class VegetableStore {
   }
 
   search(query) {
-    if (!this.searchStrategy) {
-      throw new Error('Search strategy must be filled');
-    }
-
     return this.searchStrategy.search(this.vegetables, query);
   }
 
