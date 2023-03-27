@@ -54,15 +54,12 @@
 	function ranges(el){
 		console.log(el.value)
 		$("#range").innerText = el.value
-		if(el.value>6000){
-			const byPriceSearch = new SearchByPriceRange();
-			Veggie.setSearchStrategy(byPriceSearch)
-			let response = Veggie.search(el.value)
+		$("#veggies").innerHTML = ``
+		const byPriceSearch = new SearchByPriceRange();
+		Veggie.setSearchStrategy(byPriceSearch)
+		let response = Veggie.search(el.value)
 
-			renderThing(response)
-		}else{
-			$("#veggies").innerHTML = ``
-		}
+		renderThing(response)
 	}
 
 	function renderThing(response){
